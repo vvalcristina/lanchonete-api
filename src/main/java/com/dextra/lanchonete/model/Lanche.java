@@ -18,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-@Document(collation = "lanches")
+@Document(collection = "lanches")
 public class Lanche {
 
     @Id

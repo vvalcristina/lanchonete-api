@@ -73,6 +73,10 @@ public class LanchoneteService {
 
     }
 
+    public List<Lanche> findAll(){
+        return this.lanchoneteRepository.findAll();
+    }
+
     //Preço do ingrediente
     public BigDecimal precoIngrediente(TipoIngrediente tipoIngrediente){
         switch (tipoIngrediente){

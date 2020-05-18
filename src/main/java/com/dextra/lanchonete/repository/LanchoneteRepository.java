@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface LanchoneteRepository extends MongoRepository<Lanche, String> {
 
-    List<Lanche> findAll(String name);
+    List<Lanche> findAll();
 }
