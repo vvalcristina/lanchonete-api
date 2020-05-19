@@ -1,5 +1,6 @@
 package com.dextra.lanchonete.service;
 
+import com.dextra.lanchonete.exception.LancheNotFoundException;
 import com.dextra.lanchonete.model.Adicional;
 import com.dextra.lanchonete.model.Lanche;
 import com.dextra.lanchonete.model.enums.TipoIngrediente;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class LanchoneteService {
@@ -20,6 +22,9 @@ public class LanchoneteService {
 
     PromocaoService promocaoService;
 
+    public Lanche save(Lanche lanche){
+        return lanchoneteRepository.save(lanche);
+    }
 
     //Calculando preço do lanche
     public Lanche precoLanche(TipoLanche tipoLanche){
@@ -102,5 +107,15 @@ public class LanchoneteService {
 
     public void delete(String id) {
         lanchoneteRepository.deleteById(id);
+    }
+
+    public Lanche findById(final String id) {
+        final Optional<Lanche> lanche =lanchoneteRepository.findById(id);
+        if(lanche.isPresent()){
+            return lanche.get();
+        }else {
+            throw new LancheNotFoundException();
+        }
+
     }
 }

@@ -1,16 +1,15 @@
 package com.dextra.lanchonete.controller;
 
-import com.dextra.lanchonete.exception.LancheNotFoundException;
 import com.dextra.lanchonete.model.Lanche;
 import com.dextra.lanchonete.model.enums.TipoLanche;
-import com.dextra.lanchonete.repository.LanchoneteRepository;
 import com.dextra.lanchonete.service.LanchoneteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/")
@@ -19,33 +18,27 @@ public class LanchoneteController {
     @Autowired
     private LanchoneteService lanchoneteService;
 
-    @Autowired
-    private LanchoneteRepository lanchoneteRepository;
-
     private  Lanche lanche;
 
-    @GetMapping("/lanche")
+    @GetMapping("/lanchonete")
     public List<Lanche> getAllLanche(){
-        return lanchoneteRepository.findAll();
+        return lanchoneteService.findAll();
     }
 
-    @PostMapping("/lanche/criar-lanche")
-    public ResponseEntity<Lanche> criarLanche(@RequestBody Lanche lanche){
-        Lanche novoLanche = lanchoneteService.calcularPedido(lanche);
-        lanchoneteRepository.save(lanche);
-        return ResponseEntity.ok(novoLanche);
+    @GetMapping("/lanchonete/lanche/{id}")
+    public ResponseEntity<Lanche> getLanche(@PathVariable("id") String  id){
+        final Lanche lanche = lanchoneteService.findById(id);
+        return ResponseEntity.ok(lanche);
     }
 
-    public Lanche getLanche(@PathVariable("id") String  id){
-        final Optional<Lanche> lanche =lanchoneteRepository.findById(id);
-        if(lanche.isPresent()){
-            return lanche.get();
-        }else {
-            throw new LancheNotFoundException();
-        }
+    @PostMapping("/lanchonete/lanche")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Lanche criarLanche(@Valid @RequestBody Lanche lanche){
+       return lanchoneteService.save(lanche);
     }
 
-    @GetMapping("/pedido/{tipo}")
+
+    @GetMapping("/lanchonete/{tipo}")
     public ResponseEntity<Lanche> calcularPreco(@PathVariable("tipo")TipoLanche tipoLanche){
         Lanche lanche = lanchoneteService.precoLanche(tipoLanche);
         return ResponseEntity.ok(lanche);

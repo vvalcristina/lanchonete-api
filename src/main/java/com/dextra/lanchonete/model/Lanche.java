@@ -2,10 +2,8 @@ package com.dextra.lanchonete.model;
 
 import com.dextra.lanchonete.model.enums.TipoIngrediente;
 import com.dextra.lanchonete.model.enums.TipoLanche;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -18,6 +16,8 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Document(collection = "lanche")
 public class Lanche {
 
@@ -27,6 +27,8 @@ public class Lanche {
     public TipoLanche tipoLanche;
 
     BigDecimal precoLanche;
+
+    Integer quantidade;
 
     public List<Adicional> adicionais;
 
