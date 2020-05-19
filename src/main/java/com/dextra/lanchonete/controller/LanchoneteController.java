@@ -37,7 +37,6 @@ public class LanchoneteController {
        return lanchoneteService.save(lanche);
     }
 
-
     @GetMapping("/lanchonete/{tipo}")
     public ResponseEntity<Lanche> calcularPreco(@PathVariable("tipo")TipoLanche tipoLanche){
         Lanche lanche = lanchoneteService.precoLanche(tipoLanche);

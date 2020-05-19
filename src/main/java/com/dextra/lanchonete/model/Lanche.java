@@ -30,6 +30,8 @@ public class Lanche {
 
     Integer quantidade;
 
+    Lanche lanche;
+
     public List<Adicional> adicionais;
 
     public static List<TipoIngrediente> ingredientes(TipoLanche tipoLanche){
