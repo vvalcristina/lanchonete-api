@@ -8,13 +8,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/lanchonete")
+@RequestMapping("/")
 public class LanchoneteController {
 
     @Autowired
     private LanchoneteService lanchoneteService;
 
-    @GetMapping("/pedido")
+    @Autowired
+    private  Lanche lanche;
+
+    @PostMapping("/pedido")
     public ResponseEntity<Lanche> criarLanche(@RequestBody Lanche lanche){
         Lanche novoLanche = lanchoneteService.calcularPedido(lanche);
         return ResponseEntity.ok(novoLanche);
@@ -25,4 +28,17 @@ public class LanchoneteController {
         Lanche lanche = lanchoneteService.precoLanche(tipoLanche);
         return ResponseEntity.ok(lanche);
     }
+
+    public ResponseEntity<String> delete(@PathVariable String id){
+        lanchoneteService.delete(id);
+        return ResponseEntity.ok(String.format("Lanche deletado"));
+    }
+
+    @DeleteMapping
+    public ResponseEntity<String> deleteAll(){
+        lanchoneteService.deleteAll();
+        return ResponseEntity.ok(String.format("Lanches deletados!"));
+    }
+
+
 }

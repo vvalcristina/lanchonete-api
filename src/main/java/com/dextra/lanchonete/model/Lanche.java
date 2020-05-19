@@ -18,11 +18,11 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-@Document(collection = "lanches")
+@Document(collection = "lanche")
 public class Lanche {
 
     @Id
-    public Long id;
+    public String id;
 
     public TipoLanche tipoLanche;
 

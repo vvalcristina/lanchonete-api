@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @Getter
 @Setter
-@Document
+@Document(collection = "adicional")
 public class Adicional {
 
     public TipoIngrediente tipoIngrediente;

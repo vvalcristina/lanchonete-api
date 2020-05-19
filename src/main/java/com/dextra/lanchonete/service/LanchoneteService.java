@@ -20,6 +20,7 @@ public class LanchoneteService {
 
     PromocaoService promocaoService;
 
+
     //Calculando preço do lanche
     public Lanche precoLanche(TipoLanche tipoLanche){
         Lanche lanche = new Lanche();
@@ -95,5 +96,11 @@ public class LanchoneteService {
     }
 
 
+    public void deleteAll() {
+        lanchoneteRepository.deleteAll();
+    }
 
+    public void delete(String id) {
+        lanchoneteRepository.deleteById(id);
+    }
 }

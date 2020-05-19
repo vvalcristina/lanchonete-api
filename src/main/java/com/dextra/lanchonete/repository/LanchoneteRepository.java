@@ -10,4 +10,5 @@ import java.util.List;
 public interface LanchoneteRepository extends MongoRepository<Lanche, String> {
 
     List<Lanche> findAll();
+
 }
