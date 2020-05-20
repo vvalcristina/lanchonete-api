@@ -43,10 +43,10 @@ public class LanchoneteController {
         return ResponseEntity.ok(lanche);
     }
 
-    @DeleteMapping("/lanchonete/{id}/delete")
-    public ResponseEntity<String> delete(@PathVariable String id){
+    @DeleteMapping("/lanchonete/lanche/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable("id") String id){
         lanchoneteService.delete(id);
-        return ResponseEntity.ok(String.format("Lanche deletado"));
     }
 
 

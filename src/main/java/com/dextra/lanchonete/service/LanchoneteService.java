@@ -22,10 +22,28 @@ public class LanchoneteService {
 
     PromocaoService promocaoService;
 
+    public List<Lanche> findAll(){
+        return this.lanchoneteRepository.findAll();
+    }
+
     public Lanche save(Lanche lanche){
         return lanchoneteRepository.save(lanche);
     }
 
+    public void delete(String id) {
+        final Lanche lanche = findById(id);
+        lanchoneteRepository.delete(lanche);
+    }
+
+    public Lanche findById(final String id) {
+        final Optional<Lanche> lanche =lanchoneteRepository.findById(id);
+        if(lanche.isPresent()){
+            return lanche.get();
+        }else {
+            throw new LancheNotFoundException();
+        }
+
+    }
     //Calculando preço do lanche
     public Lanche precoLanche(TipoLanche tipoLanche){
         Lanche lanche = new Lanche();
@@ -76,13 +94,7 @@ public class LanchoneteService {
             pedido.setPrecoLanche(totalPedido(ingredienteLanche, adicional));
         }
         return pedido;
-
     }
-
-    public List<Lanche> findAll(){
-        return this.lanchoneteRepository.findAll();
-    }
-
     //Preço do ingrediente
     public BigDecimal precoIngrediente(TipoIngrediente tipoIngrediente){
         switch (tipoIngrediente){
@@ -100,22 +112,4 @@ public class LanchoneteService {
         return BigDecimal.ZERO;
     }
 
-
-    public void deleteAll() {
-        lanchoneteRepository.deleteAll();
-    }
-
-    public void delete(String id) {
-        lanchoneteRepository.deleteById(id);
-    }
-
-    public Lanche findById(final String id) {
-        final Optional<Lanche> lanche =lanchoneteRepository.findById(id);
-        if(lanche.isPresent()){
-            return lanche.get();
-        }else {
-            throw new LancheNotFoundException();
-        }
-
-    }
 }
