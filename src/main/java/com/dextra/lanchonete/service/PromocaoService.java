@@ -1,6 +1,7 @@
 package com.dextra.lanchonete.service;
 
 import com.dextra.lanchonete.model.enums.TipoIngrediente;
+import com.dextra.lanchonete.model.enums.TipoLanche;
 import com.dextra.lanchonete.repository.LanchoneteRepository;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @AllArgsConstructor
@@ -23,7 +26,7 @@ public class PromocaoService {
 
     TipoIngrediente tipoIngrediente;
 
-    LanchoneteService lanchoneteService;
+    PedidosService pedidosService;
 
     //Lanche tem alface e bacon: 10% de desconto
     public BigDecimal promocaoLight(List<TipoIngrediente> ingrediente, BigDecimal valor){
@@ -63,9 +66,23 @@ public class PromocaoService {
         BigDecimal carneDesconto = new BigDecimal(carne/3).setScale(1, RoundingMode.DOWN);
         BigDecimal queijoDesconto = new BigDecimal(queijo/3).setScale(1, RoundingMode.DOWN);
 
-        BigDecimal desconto = lanchoneteService.precoIngrediente(TipoIngrediente.HAMBURGUER).multiply(carneDesconto)
-                .add(lanchoneteService.precoIngrediente(TipoIngrediente.QUEIJO).multiply(queijoDesconto));
+        BigDecimal desconto = pedidosService.precoIngrediente(TipoIngrediente.HAMBURGUER).multiply(carneDesconto)
+                .add(pedidosService.precoIngrediente(TipoIngrediente.QUEIJO).multiply(queijoDesconto));
 
         return valor.subtract(desconto);
+    }
+
+    public static List<TipoIngrediente> ingredientes(TipoLanche tipoLanche){
+        switch (tipoLanche){
+            case X_BACON:
+                return Arrays.asList(TipoIngrediente.BACON, TipoIngrediente.HAMBURGUER, TipoIngrediente.QUEIJO);
+            case X_EGG:
+                return Arrays.asList(TipoIngrediente.OVO, TipoIngrediente.HAMBURGUER,TipoIngrediente.QUEIJO);
+            case X_BURGUER:
+                return Arrays.asList(TipoIngrediente.HAMBURGUER, TipoIngrediente.QUEIJO);
+            case X_EGG_BACON:
+                return Arrays.asList(TipoIngrediente.BACON, TipoIngrediente.OVO, TipoIngrediente.HAMBURGUER, TipoIngrediente.QUEIJO);
+        }
+        return new ArrayList<TipoIngrediente>();
     }
 }

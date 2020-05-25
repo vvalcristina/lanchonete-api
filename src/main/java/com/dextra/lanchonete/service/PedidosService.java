@@ -1,6 +1,6 @@
 package com.dextra.lanchonete.service;
 
-import com.dextra.lanchonete.exception.LancheNotFoundException;
+import com.dextra.lanchonete.exception.PedidosNotFoundException;
 import com.dextra.lanchonete.model.Adicional;
 import com.dextra.lanchonete.model.Lanche;
 import com.dextra.lanchonete.model.enums.TipoIngrediente;
@@ -11,11 +11,12 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class LanchoneteService {
+public class PedidosService {
 
     @Autowired
     LanchoneteRepository lanchoneteRepository;
@@ -40,7 +41,7 @@ public class LanchoneteService {
         if(lanche.isPresent()){
             return lanche.get();
         }else {
-            throw new LancheNotFoundException();
+            throw new PedidosNotFoundException();
         }
 
     }
@@ -111,5 +112,6 @@ public class LanchoneteService {
         }
         return BigDecimal.ZERO;
     }
+
 
 }

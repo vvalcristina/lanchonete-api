@@ -2,7 +2,7 @@ package com.dextra.lanchonete.controller;
 
 import com.dextra.lanchonete.model.Lanche;
 import com.dextra.lanchonete.model.enums.TipoLanche;
-import com.dextra.lanchonete.service.LanchoneteService;
+import com.dextra.lanchonete.service.PedidosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,43 +12,41 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/")
-public class LanchoneteController {
+@RequestMapping("/pedidos")
+public class PedidosController {
 
     @Autowired
-    private LanchoneteService lanchoneteService;
+    private PedidosService pedidosService;
 
     private  Lanche lanche;
 
-    @GetMapping("/lanchonete")
+    @GetMapping
     public List<Lanche> getAllLanche(){
-        return lanchoneteService.findAll();
+        return pedidosService.findAll();
     }
 
-    @GetMapping("/lanchonete/lanche/{id}")
+    @GetMapping("/lanche/{id}")
     public ResponseEntity<Lanche> getLanche(@PathVariable("id") String  id){
-        final Lanche lanche = lanchoneteService.findById(id);
+        final Lanche lanche = pedidosService.findById(id);
         return ResponseEntity.ok(lanche);
     }
 
-    @PostMapping("/lanchonete/lanche")
+    @PostMapping("/lanche")
     @ResponseStatus(HttpStatus.CREATED)
     public Lanche criarLanche(@Valid @RequestBody Lanche lanche){
-       return lanchoneteService.save(lanche);
+       return pedidosService.save(lanche);
     }
 
-    @GetMapping("/lanchonete/{tipo}")
+    @GetMapping("/pedido/{tipo}")
     public ResponseEntity<Lanche> calcularPreco(@PathVariable("tipo")TipoLanche tipoLanche){
-        Lanche lanche = lanchoneteService.precoLanche(tipoLanche);
+        Lanche lanche = pedidosService.precoLanche(tipoLanche);
         return ResponseEntity.ok(lanche);
     }
 
-    @DeleteMapping("/lanchonete/lanche/{id}")
+    @DeleteMapping("/lanche/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") String id){
-        lanchoneteService.delete(id);
+        pedidosService.delete(id);
     }
-
-
 
 }
