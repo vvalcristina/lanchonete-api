@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 @AllArgsConstructor
@@ -30,11 +31,9 @@ public class Lanche {
 
     Integer quantidade;
 
-    Lanche lanche;
-
     public List<Adicional> adicionais;
 
-    public static List<TipoIngrediente> ingredientes(TipoLanche tipoLanche){
+    public static Collection<? extends TipoIngrediente> ingredientes(TipoLanche tipoLanche){
         switch (tipoLanche){
             case X_BACON:
                 return Arrays.asList(TipoIngrediente.BACON, TipoIngrediente.HAMBURGUER, TipoIngrediente.QUEIJO);

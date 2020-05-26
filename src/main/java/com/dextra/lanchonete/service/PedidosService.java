@@ -2,9 +2,11 @@ package com.dextra.lanchonete.service;
 
 import com.dextra.lanchonete.exception.PedidosNotFoundException;
 import com.dextra.lanchonete.model.Adicional;
+import com.dextra.lanchonete.model.Ingrediente;
 import com.dextra.lanchonete.model.Lanche;
 import com.dextra.lanchonete.model.enums.TipoIngrediente;
 import com.dextra.lanchonete.model.enums.TipoLanche;
+import com.dextra.lanchonete.repository.IngredienteRepository;
 import com.dextra.lanchonete.repository.LanchoneteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,9 @@ public class PedidosService {
 
     @Autowired
     LanchoneteRepository lanchoneteRepository;
+
+    @Autowired
+    IngredienteRepository ingredienteRepository;
 
     PromocaoService promocaoService;
 
@@ -38,6 +43,7 @@ public class PedidosService {
 
     public Lanche findById(final String id) {
         final Optional<Lanche> lanche =lanchoneteRepository.findById(id);
+        final Optional<Ingrediente> ingredientes = ingredienteRepository.findById(id);
         if(lanche.isPresent()){
             return lanche.get();
         }else {
