@@ -1,13 +1,12 @@
 package com.dextra.lanchonete.model;
 
-import com.dextra.lanchonete.model.enums.TipoIngrediente;
+import com.dextra.lanchonete.model.enums.Ingrediente;
 import com.dextra.lanchonete.model.enums.TipoLanche;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -23,28 +22,26 @@ import java.util.List;
 public class Lanche {
 
     @Id
-    public String id;
+    private String id;
 
-    public TipoLanche tipoLanche;
-
-    BigDecimal precoLanche;
-
-    Integer quantidade;
+    private String descricao;
+    private TipoLanche tipoLanche;
+    private String preco;
 
     public List<Adicional> adicionais;
 
-    public static Collection<? extends TipoIngrediente> ingredientes(TipoLanche tipoLanche){
+    public static Collection<? extends Ingrediente> ingredientes(TipoLanche tipoLanche){
         switch (tipoLanche){
             case X_BACON:
-                return Arrays.asList(TipoIngrediente.BACON, TipoIngrediente.HAMBURGUER, TipoIngrediente.QUEIJO);
+                return Arrays.asList(Ingrediente.BACON, Ingrediente.HAMBURGUER, Ingrediente.QUEIJO);
             case X_EGG:
-                return Arrays.asList(TipoIngrediente.OVO, TipoIngrediente.HAMBURGUER,TipoIngrediente.QUEIJO);
+                return Arrays.asList(Ingrediente.OVO, Ingrediente.HAMBURGUER, Ingrediente.QUEIJO);
             case X_BURGUER:
-                return Arrays.asList(TipoIngrediente.HAMBURGUER, TipoIngrediente.QUEIJO);
+                return Arrays.asList(Ingrediente.HAMBURGUER, Ingrediente.QUEIJO);
             case X_EGG_BACON:
-                return Arrays.asList(TipoIngrediente.BACON, TipoIngrediente.OVO, TipoIngrediente.HAMBURGUER, TipoIngrediente.QUEIJO);
+                return Arrays.asList(Ingrediente.BACON, Ingrediente.OVO, Ingrediente.HAMBURGUER, Ingrediente.QUEIJO);
         }
-        return new ArrayList<TipoIngrediente>();
+        return new ArrayList<Ingrediente>();
     }
 
     public List<Adicional> getAdicional(){return adicionais;}

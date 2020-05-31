@@ -2,18 +2,17 @@ package com.dextra.lanchonete.service;
 
 import com.dextra.lanchonete.exception.PedidosNotFoundException;
 import com.dextra.lanchonete.model.Adicional;
-import com.dextra.lanchonete.model.Ingrediente;
 import com.dextra.lanchonete.model.Lanche;
-import com.dextra.lanchonete.model.enums.TipoIngrediente;
+import com.dextra.lanchonete.model.Pedido;
+import com.dextra.lanchonete.model.enums.Ingrediente;
 import com.dextra.lanchonete.model.enums.TipoLanche;
-import com.dextra.lanchonete.repository.IngredienteRepository;
 import com.dextra.lanchonete.repository.LanchoneteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,27 +22,24 @@ public class PedidosService {
     @Autowired
     LanchoneteRepository lanchoneteRepository;
 
-    @Autowired
-    IngredienteRepository ingredienteRepository;
-
     PromocaoService promocaoService;
 
-    public List<Lanche> findAll(){
+    public List<Pedido> findAll(){
         return this.lanchoneteRepository.findAll();
     }
 
-    public Lanche save(Lanche lanche){
-        return lanchoneteRepository.save(lanche);
+    public Pedido save(Pedido pedido){
+        calcularPedido(pedido);
+        return lanchoneteRepository.save(pedido);
     }
 
     public void delete(String id) {
-        final Lanche lanche = findById(id);
+        final Pedido lanche = findById(id);
         lanchoneteRepository.delete(lanche);
     }
 
-    public Lanche findById(final String id) {
-        final Optional<Lanche> lanche =lanchoneteRepository.findById(id);
-        final Optional<Ingrediente> ingredientes = ingredienteRepository.findById(id);
+    public Pedido findById(final String id) {
+        final Optional<Pedido> lanche =lanchoneteRepository.findById(id);
         if(lanche.isPresent()){
             return lanche.get();
         }else {
@@ -55,20 +51,20 @@ public class PedidosService {
     public Lanche precoLanche(TipoLanche tipoLanche){
         Lanche lanche = new Lanche();
 
-        List<TipoIngrediente> ingredientes = new ArrayList<>();
+        List<Ingrediente> ingredientes = new ArrayList<>();
 
         ingredientes.addAll(Lanche.ingredientes(tipoLanche));
 
-        lanche.setPrecoLanche(totalPedido(ingredientes, false));
+        lanche.setPreco(formatValor(totalPedido(ingredientes, false)));
 
         return lanche;
     }
     //Calcula o valor total do pedido
-    public BigDecimal totalPedido(List<TipoIngrediente> ingredientes, boolean adicional){
+    public BigDecimal totalPedido(List<Ingrediente> ingredientes, boolean adicional){
         BigDecimal totalPedido = BigDecimal.ZERO;
 
-        for (TipoIngrediente tipoIngrediente: ingredientes){
-            totalPedido = totalPedido.add(precoIngrediente(tipoIngrediente));
+        for (Ingrediente tipoIngrediente: ingredientes){
+            totalPedido = totalPedido.add(this.precoIngrediente(tipoIngrediente));
         }
         if(adicional){
             totalPedido = promocaoService.promocaoCarneQueijo(ingredientes, totalPedido);
@@ -79,31 +75,31 @@ public class PedidosService {
     }
 
     //Preparando o pedido
-    public Lanche calcularPedido(Lanche lanche){
-        Lanche pedido = new Lanche();
+    public Pedido calcularPedido(Pedido pedidos){
+        Pedido pedido = new Pedido();
         boolean adicional = false;
 
         if(pedido == null){
             return pedido;
         }
-        List<TipoIngrediente>ingredienteLanche = new ArrayList<>();
+        List<Ingrediente>ingredienteLanche = new ArrayList<>();
 
-        if(pedido.getTipoLanche() != null){
-            ingredienteLanche.addAll(Lanche.ingredientes(pedido.getTipoLanche()));
+        if(pedido.getLanche() != null){
+            ingredienteLanche.addAll(Lanche.ingredientes(pedido.getLanche()));
             if (pedido.getAdicionais() != null && !pedido.getAdicionais().isEmpty()){
                 adicional = true;
                 for (Adicional extra: pedido.getAdicionais()){
                     for(int i=0; i<extra.getQuantidade(); i++){
-                        ingredienteLanche.add(extra.getTipoIngrediente());
+                        ingredienteLanche.add(extra.getIngrediente());
                     }
                 }
             }
-            pedido.setPrecoLanche(totalPedido(ingredienteLanche, adicional));
+            pedido.setTotal(formatValor(totalPedido(ingredienteLanche, adicional)));
         }
         return pedido;
     }
     //Preço do ingrediente
-    public BigDecimal precoIngrediente(TipoIngrediente tipoIngrediente){
+    public BigDecimal precoIngrediente(Ingrediente tipoIngrediente){
         switch (tipoIngrediente){
             case ALFACE:
                 return new BigDecimal(0.40);
@@ -117,6 +113,12 @@ public class PedidosService {
                 return new BigDecimal(1.50);
         }
         return BigDecimal.ZERO;
+    }
+
+    private String formatValor(BigDecimal valor) {
+        DecimalFormat decimalFormat = new DecimalFormat();
+        decimalFormat.setMinimumFractionDigits(2);
+        return decimalFormat.format(valor);
     }
 
 

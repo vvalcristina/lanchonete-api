@@ -1,6 +1,7 @@
 package com.dextra.lanchonete.controller;
 
 import com.dextra.lanchonete.model.Lanche;
+import com.dextra.lanchonete.model.Pedido;
 import com.dextra.lanchonete.model.enums.TipoLanche;
 import com.dextra.lanchonete.service.PedidosService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,20 +22,21 @@ public class PedidosController {
     private  Lanche lanche;
 
     @GetMapping
-    public List<Lanche> getAllLanche(){
+    public List<Pedido> getAllLanche(){
         return pedidosService.findAll();
     }
 
     @GetMapping("/lanche/{id}")
-    public ResponseEntity<Lanche> getLanche(@PathVariable("id") String  id){
-        final Lanche lanche = pedidosService.findById(id);
+    public ResponseEntity<Pedido> getLanche(@PathVariable("id") String  id){
+        final Pedido lanche = pedidosService.findById(id);
         return ResponseEntity.ok(lanche);
     }
 
     @PostMapping("/lanche")
     @ResponseStatus(HttpStatus.CREATED)
-    public Lanche criarLanche(@Valid @RequestBody Lanche lanche){
-       return pedidosService.save(lanche);
+    public Pedido criarLanche(@Valid @RequestBody Pedido pedido){
+        Pedido novoPedido = pedidosService.calcularPedido(pedido);
+       return pedidosService.save(novoPedido);
     }
 
     @GetMapping("/pedido/{tipo}")
